@@ -1,0 +1,3 @@
+-I./tetris_sdl/src
+-I./tetris_sdl/vendor/SDL2/include
+-I./tetris_sdl/vendor/spdlog/include
