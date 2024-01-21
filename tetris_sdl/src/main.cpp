@@ -4,8 +4,8 @@
 #include "Viewport.h"
 #include "log.h"
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+constexpr int SCREEN_WIDTH =  1280;
+constexpr int SCREEN_HEIGHT =  720;
 
 int main(int argc, char *argv[]) {
     SDL_Point vertices[3] = {{400, 100}, {200, 500}, {600, 500}};
@@ -23,27 +23,29 @@ int main(int argc, char *argv[]) {
         Viewport rightSide(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2,
                            SCREEN_HEIGHT / 2);
         Viewport menuRight(SCREEN_WIDTH - (SCREEN_WIDTH / 3), 0, SCREEN_WIDTH / 3, SCREEN_HEIGHT);
-        SDL_Renderer *ref = renderer.getRenderer();
         while (!quit) {
+            if(i >= 255) i = 0;
+            if(j >= 255) j = 0;
+            if(k >= 255) k = 0;
             while (SDL_PollEvent(&e) != 0) {
                 if (e.type == SDL_QUIT) {
                     quit = true;
                 }
             }
-            renderer.clear();
+            renderer.RenderClear();
 
-            renderer.setColor(i, j, k);
+            renderer.setColor(k, j, i);
             renderer.setCurrentViewport(leftSide);
-            // renderer.DrawQuad(10, 10, 100, 100);
-            renderer.FillViewport(leftSide);
+            renderer.DrawQuad(0, 0, 150, 100);
+            // renderer.FillViewport(leftSide);
 
             renderer.setColor(i, i, k);
-            
             renderer.setCurrentViewport(menuRight);
             renderer.FillViewport(menuRight);
         
             renderer.setColor(i, k, j);
-            renderer.render();
+            renderer.Render();
+            i++; j++; k++;
         }
     }
     return 0;

@@ -39,10 +39,10 @@ Renderer::~Renderer()
     SDL_Quit();
 }
 
-void Renderer::clear() {
+void Renderer::RenderClear() {
     SDL_RenderClear(m_Renderer);
 }
-void Renderer::render() {
+void Renderer::Render() {
 
     // SDL_SetRenderDrawColor(m_Renderer, 255, 255, 0, 255);
     // SDL_RenderDrawLines(m_Renderer, vertices, 4);

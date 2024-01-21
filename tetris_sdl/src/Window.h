@@ -5,6 +5,7 @@
 class Window {
     public:
         Window();
+
         bool init(int width = 1280, int height = 720, const char* title = "Tetris");
 
         void free();
@@ -14,7 +15,7 @@ class Window {
         inline int getWidth() const { return m_Width; }
         inline int getHeight() const { return m_Height; }
 
-        void handleEvent(SDL_Event& e);
+        void handleEvent(SDL_Renderer *renderer, SDL_Event& e);
 
         inline bool hasMouseFocus() const { return m_MouseFocus; }
         inline bool hasKeyboardFocus() const { return m_KeyboardFocus; }
