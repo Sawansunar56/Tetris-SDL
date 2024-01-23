@@ -3,13 +3,43 @@
 #include "Renderer.h"
 #include "Viewport.h"
 #include "log.h"
+#include "texture.h"
 
-constexpr int SCREEN_WIDTH =  1280;
-constexpr int SCREEN_HEIGHT =  720;
+constexpr int SCREEN_WIDTH = 1280;
+constexpr int SCREEN_HEIGHT = 720;
+
+SDL_Rect gSpriteClips[10];
+
+bool loadMedia(Texture &text, SDL_Renderer *ref) {
+    bool success = true;
+
+    if (!text.loadFromFile(ref, "Assets/sprites/tetris.png")) {
+        LOG_ERROR("Failed to load sprite sheet texture!");
+        success = false;
+    } else {
+        gSpriteClips[0].x = 0;
+        gSpriteClips[0].y = 0;
+        gSpriteClips[0].w = 80;
+        gSpriteClips[0].h = 80;
+
+        gSpriteClips[1].x = 0;
+        gSpriteClips[1].y = 100;
+        gSpriteClips[1].w = 80;
+        gSpriteClips[1].h = 80;
+    }
+    return success;
+}
 
 int main(int argc, char *argv[]) {
     SDL_Point vertices[3] = {{400, 100}, {200, 500}, {600, 500}};
     Renderer renderer;
+    SDL_Renderer *ref = renderer.getRenderer();
+    Texture text;
+
+    if (!loadMedia(text, ref)) {
+        LOG_ERROR("PROBLEMS IN LOAD MEDIA");
+    }
+
     if (!renderer.getInit()) {
         LOG_ERROR("Failed to initialize");
     } else {
@@ -20,13 +50,9 @@ int main(int argc, char *argv[]) {
         int i = 0, j = 120, k = 100;
 
         Viewport leftSide(0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
-        Viewport rightSide(SCREEN_WIDTH / 2, 0, SCREEN_WIDTH / 2,
-                           SCREEN_HEIGHT / 2);
-        Viewport menuRight(SCREEN_WIDTH - (SCREEN_WIDTH / 3), 0, SCREEN_WIDTH / 3, SCREEN_HEIGHT);
+        Viewport menuRight(SCREEN_WIDTH - (SCREEN_WIDTH / 3), 0,
+                           SCREEN_WIDTH / 3, SCREEN_HEIGHT);
         while (!quit) {
-            if(i >= 255) i = 0;
-            if(j >= 255) j = 0;
-            if(k >= 255) k = 0;
             while (SDL_PollEvent(&e) != 0) {
                 if (e.type == SDL_QUIT) {
                     quit = true;
@@ -37,15 +63,16 @@ int main(int argc, char *argv[]) {
             renderer.setColor(k, j, i);
             renderer.setCurrentViewport(leftSide);
             renderer.DrawQuad(0, 0, 150, 100);
-            // renderer.FillViewport(leftSide);
 
             renderer.setColor(i, i, k);
             renderer.setCurrentViewport(menuRight);
             renderer.FillViewport(menuRight);
-        
+
             renderer.setColor(i, k, j);
+
+            text.render(ref, 0, 0, &gSpriteClips[0]);
+            text.render(ref, 100, 100, &gSpriteClips[1]);
             renderer.Render();
-            i++; j++; k++;
         }
     }
     return 0;

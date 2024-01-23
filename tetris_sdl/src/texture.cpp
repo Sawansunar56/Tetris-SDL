@@ -49,6 +49,17 @@ void Texture::free() {
     }
 }
 
+void Texture::render(SDL_Renderer *ref, int x, int y, SDL_Rect *clip,
+                     double angle, SDL_Point *center, SDL_RendererFlip flip) {
+    SDL_Rect renderQuad = {x, y, m_Width, m_Height};
+
+    if (clip != NULL) {
+        renderQuad.w = clip->w;
+        renderQuad.h = clip->h;
+    }
+    SDL_RenderCopy(ref, m_Texture, clip, &renderQuad);
+}
+
 void Texture::setColor(Uint8 red, Uint8 green, Uint8 blue) {
     SDL_SetTextureColorMod(m_Texture, red, green, blue);
 }
@@ -57,4 +68,6 @@ void Texture::blendMode(SDL_BlendMode blending) {
     SDL_SetTextureBlendMode(m_Texture, blending);
 }
 
-void Texture::setAlpha(Uint8 alpha) { SDL_SetTextureAlphaMod(m_Texture, alpha); }
+void Texture::setAlpha(Uint8 alpha) {
+    SDL_SetTextureAlphaMod(m_Texture, alpha);
+}

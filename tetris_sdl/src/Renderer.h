@@ -20,6 +20,7 @@ class Renderer {
     inline bool getInit() const { return m_Initialized; }
     SDL_Renderer *getRenderer() { return m_Renderer; }
 
+    void addTexture();
     void DrawQuad(int x, int y, int width, int height);
     void FillViewport(Viewport viewport);
   private:
