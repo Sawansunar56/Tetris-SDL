@@ -4,8 +4,10 @@
 #include "Viewport.h"
 #include "log.h"
 #include "texture.h"
+#include "board.h"
+#include "Tetromino.h"
 
-constexpr int SCREEN_WIDTH = 1280;
+constexpr int SCREEN_WIDTH = 960;
 constexpr int SCREEN_HEIGHT = 720;
 
 SDL_Rect gSpriteClips[10];
@@ -17,6 +19,7 @@ bool loadMedia(Texture &text, SDL_Renderer *ref) {
         LOG_ERROR("Failed to load sprite sheet texture!");
         success = false;
     } else {
+
         gSpriteClips[0].x = 0;
         gSpriteClips[0].y = 0;
         gSpriteClips[0].w = 80;
@@ -32,9 +35,11 @@ bool loadMedia(Texture &text, SDL_Renderer *ref) {
 
 int main(int argc, char *argv[]) {
     SDL_Point vertices[3] = {{400, 100}, {200, 500}, {600, 500}};
-    Renderer renderer;
+    Renderer renderer(SCREEN_WIDTH, SCREEN_HEIGHT);
     SDL_Renderer *ref = renderer.getRenderer();
     Texture text;
+
+    Tetromino lost{0, 0, 80, 80};
 
     if (!loadMedia(text, ref)) {
         LOG_ERROR("PROBLEMS IN LOAD MEDIA");
@@ -49,20 +54,20 @@ int main(int argc, char *argv[]) {
 
         int i = 0, j = 120, k = 100;
 
-        Viewport leftSide(0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+        Viewport gameSide(50, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT);
         Viewport menuRight(SCREEN_WIDTH - (SCREEN_WIDTH / 3), 0,
                            SCREEN_WIDTH / 3, SCREEN_HEIGHT);
         while (!quit) {
             while (SDL_PollEvent(&e) != 0) {
                 if (e.type == SDL_QUIT) {
-                    quit = true;
+                   quit = true;
                 }
             }
             renderer.RenderClear();
 
-            renderer.setColor(k, j, i);
-            renderer.setCurrentViewport(leftSide);
-            renderer.DrawQuad(0, 0, 150, 100);
+            renderer.setColor(100,100,100);
+            renderer.setCurrentViewport(gameSide);
+            renderer.FillViewport(gameSide);
 
             renderer.setColor(i, i, k);
             renderer.setCurrentViewport(menuRight);
@@ -70,8 +75,17 @@ int main(int argc, char *argv[]) {
 
             renderer.setColor(i, k, j);
 
-            text.render(ref, 0, 0, &gSpriteClips[0]);
-            text.render(ref, 100, 100, &gSpriteClips[1]);
+            renderer.setColor(255, 100, 200);
+            renderer.setCurrentViewport(gameSide);
+            makeBoard(ref, gameSide);
+
+            lost.render(*ref, text, 0, 0);
+            // text.render(ref, 0, 0, lost.getClip());
+            // text.render(ref, 0, 0, &gSpriteClips[0]);
+            // text.render(ref, 0, 20, &gSpriteClips[1]);
+
+            renderer.setCurrentViewport(nullptr);
+            renderer.setColor(0, 0, 0);
             renderer.Render();
         }
     }

@@ -54,8 +54,8 @@ void Texture::render(SDL_Renderer *ref, int x, int y, SDL_Rect *clip,
     SDL_Rect renderQuad = {x, y, m_Width, m_Height};
 
     if (clip != NULL) {
-        renderQuad.w = clip->w;
-        renderQuad.h = clip->h;
+        renderQuad.w = clip->w * 2;
+        renderQuad.h = clip->h * 2;
     }
     SDL_RenderCopy(ref, m_Texture, clip, &renderQuad);
 }

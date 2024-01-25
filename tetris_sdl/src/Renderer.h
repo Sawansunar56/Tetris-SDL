@@ -14,6 +14,7 @@ class Renderer {
     void RenderClear();
 
     void setCurrentViewport(Viewport viewport);
+    void setCurrentViewport(SDL_Rect* viewport);
     void setColor(uint8_t red, uint8_t green, uint8_t blue,
                   uint8_t alpha = 255);
 

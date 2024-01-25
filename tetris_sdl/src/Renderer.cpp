@@ -58,6 +58,9 @@ void Renderer::setCurrentViewport(Viewport viewport) {
     SDL_RenderSetViewport(m_Renderer, &viewport.getViewport());
 }
 
+void Renderer::setCurrentViewport(SDL_Rect* viewport) {
+    SDL_RenderSetViewport(m_Renderer, viewport);
+}
 void Renderer::DrawQuad(int x, int y, int width, int height) {
     SDL_Rect fillRect = {x, y, width, height};
     SDL_RenderFillRect(m_Renderer, &fillRect);

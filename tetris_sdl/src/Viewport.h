@@ -11,6 +11,8 @@ class Viewport {
         m_Viewport.y = y;
         m_Viewport.w = w;
         m_Viewport.h = h;
+        m_Width = w;
+        m_Height = h;
     }
     inline int getWidth() const { return m_Width; }
     inline int getHeight() const { return m_Height; }
